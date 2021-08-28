@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClientClass());
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
-        webView.addJavascriptInterface(new WebViewInterface(this, webView), "Android");
+        webView.addJavascriptInterface(new WebViewInterface(this, webView), "Native");
 
         webView.loadUrl(url);
     }

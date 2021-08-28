@@ -30,6 +30,10 @@ public class AlarmWrapper {
         alarmIntent.putExtra("text", text);
         alarmIntent.putExtra("largeIconType", largeIconType);
 
+        Log.d(LOG_TAG, title);
+        Log.d(LOG_TAG, text);
+        Log.d(LOG_TAG, largeIconType);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -38,6 +42,29 @@ public class AlarmWrapper {
         }
 
         enableReceiver();
+    }
+
+    public void cancel(String requestCodeStr) {
+        int requestCode = Integer.parseInt(requestCodeStr);
+
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(context, requestCode, alarmIntent,
+                        PendingIntent.FLAG_NO_CREATE);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
+
+    public boolean isExist(String requestCodeStr) {
+        int requestCode = Integer.parseInt(requestCodeStr);
+
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(context, requestCode, alarmIntent,
+                        PendingIntent.FLAG_NO_CREATE);
+
+        return pendingIntent != null;
     }
 
     private void enableReceiver() {

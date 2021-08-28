@@ -30,6 +30,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         String title = intent.getStringExtra("title");
         String text = intent.getStringExtra("text");
         int largeIcon = toDrawable(intent.getStringExtra("largeIconType"));
+        int notificationId = (int) ((System.currentTimeMillis() / 1000L) % Integer.MAX_VALUE);
+
+        Log.d(LOG_TAG, title);
+        Log.d(LOG_TAG, text);
+        Log.d(LOG_TAG, notificationId + "");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.gong_white2_outline)
@@ -40,7 +45,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentIntent(createNotificationPendingIntent(context))
                 .setAutoCancel(true);
 
-        notificationManager.notify(1, builder.build());
+        notificationManager.notify(notificationId, builder.build());
     }
 
     private void createNotificationChannel(Context context) {

@@ -31,8 +31,18 @@ public class WebViewInterface {
     }
 
     @JavascriptInterface
-    public void createAlarm(String requestCodeStr, String epochMillisecondsStr, String title, String text, String largeIconType) {
+    public void setAlarm(String requestCodeStr, String epochMillisecondsStr, String title, String text, String largeIconType) {
         alarmWrapper.set(requestCodeStr, epochMillisecondsStr, title, text, largeIconType);
+    }
+
+    @JavascriptInterface
+    public void cancelAlarm(String requestCodeStr) {
+        alarmWrapper.cancel(requestCodeStr);
+    }
+
+    @JavascriptInterface
+    public boolean isAlarmExist(String requestCodeStr) {
+        return alarmWrapper.isExist(requestCodeStr);
     }
 
 }
