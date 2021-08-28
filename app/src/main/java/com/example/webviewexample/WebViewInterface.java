@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -41,7 +42,8 @@ public class WebViewInterface {
         createNotificationChannel();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.gong_white2_outline)
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.gong_offer12))
                 .setContentTitle(title)
                 .setContentText(desc)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
