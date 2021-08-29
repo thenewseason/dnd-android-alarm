@@ -37,8 +37,23 @@ public class AlarmWrapper {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+        // setExactAndAllowWhileIdle() 설정 후
+        // adb 명령어로 doze 모드에 진입시키면 알람이 제시각에 울리지 않음.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+//        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // setAlarmClock() 으로 설정시
+            // adb -s 192.168.219.110:5902 shell dumpsys deviceidle step
+            // -> Stepped to deep: INACTIVE
+            // 인접한 알람이 있을 경우 doze 모드 진입이 안되는 것 같다.
+            AlarmManager.AlarmClockInfo ac = new AlarmManager.AlarmClockInfo(triggerAtMillis, pendingIntent);
+            alarmManager.setAlarmClock(ac, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
         }
 
         enableReceiver();
