@@ -1,5 +1,6 @@
 package com.example.webviewexample;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,8 +43,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle(title)
                 .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(createNotificationPendingIntent(context))
-                .setAutoCancel(true);
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setContentIntent(createNotificationPendingIntent(context));
 
         notificationManager.notify(notificationId, builder.build());
     }

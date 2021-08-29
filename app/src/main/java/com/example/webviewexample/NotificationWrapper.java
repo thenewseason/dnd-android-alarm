@@ -1,5 +1,6 @@
 package com.example.webviewexample;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,7 +23,7 @@ public class NotificationWrapper {
         this.context = context;
     }
 
-    public void notify(String title, String description, String largeIconType) {
+    public void notify(String title, String text, String largeIconType) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         createNotificationChannel();
@@ -31,10 +32,11 @@ public class NotificationWrapper {
                 .setSmallIcon(R.drawable.gong_white2_outline)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), toDrawable(largeIconType)))
                 .setContentTitle(title)
-                .setContentText(description)
+                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(createNotificationPendingIntent())
-                .setAutoCancel(true);
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setContentIntent(createNotificationPendingIntent());
 
         notificationManager.notify(1, builder.build());
     }
