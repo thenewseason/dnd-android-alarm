@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private WebView webView;
     private String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

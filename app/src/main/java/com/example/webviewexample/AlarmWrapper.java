@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class AlarmWrapper {
 
-    public static final String LOG_TAG = "[GONG][AlarmWrapper]";
+    public static final String LOG_TAG = "AlarmWrapper";
 
     Context context;
 
@@ -19,11 +19,11 @@ public class AlarmWrapper {
         this.context = context;
     }
 
-    public void set(String requestCodeStr, String epochMillisecondsStr, String title, String text, String largeIconType) {
-        Log.d(LOG_TAG, "set");
+    public void set(String requestCodeStr, String triggerAtMillisStr, String title, String text, String largeIconType) {
+        Log.d(LOG_TAG, "set() requestCode: " + requestCodeStr + ", triggerAtMillis: " + triggerAtMillisStr);
 
         int requestCode = Integer.parseInt(requestCodeStr);
-        long triggerAtMillis = Long.parseLong(epochMillisecondsStr);
+        long triggerAtMillis = Long.parseLong(triggerAtMillisStr);
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         alarmIntent.putExtra("title", title);
@@ -60,6 +60,8 @@ public class AlarmWrapper {
     }
 
     public void cancel(String requestCodeStr) {
+        Log.d(LOG_TAG, "cancel() requestCode: " + requestCodeStr);
+
         int requestCode = Integer.parseInt(requestCodeStr);
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -72,6 +74,8 @@ public class AlarmWrapper {
     }
 
     public boolean isExist(String requestCodeStr) {
+        Log.d(LOG_TAG, "isExist() requestCode: " + requestCodeStr);
+
         int requestCode = Integer.parseInt(requestCodeStr);
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -80,6 +84,20 @@ public class AlarmWrapper {
                         PendingIntent.FLAG_NO_CREATE);
 
         return pendingIntent != null;
+    }
+
+    public void disableReceiver() {
+        PackageManager pm = context.getPackageManager();
+        ComponentName deviceBootReceiver = new ComponentName(context, DeviceBootReceiver.class);
+        ComponentName alarmReceiver = new ComponentName(context, AlarmReceiver.class);
+
+        pm.setComponentEnabledSetting(deviceBootReceiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+
+        pm.setComponentEnabledSetting(alarmReceiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
     }
 
     private void enableReceiver() {

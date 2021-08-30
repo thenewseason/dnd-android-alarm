@@ -7,21 +7,21 @@ import android.widget.Toast;
 
 public class WebViewInterface {
 
-    private Context mContext;
-    private WebView mWebView;
+    private Context context;
+    private WebView webView;
     private NotificationWrapper notificationWrapper;
     private AlarmWrapper alarmWrapper;
 
     public WebViewInterface(Context context, WebView webView) {
-        mContext = context;
-        mWebView = webView;
-        notificationWrapper = new NotificationWrapper(context);
-        alarmWrapper = new AlarmWrapper(context);
+        this.context = context;
+        this.webView = webView;
+        this.notificationWrapper = new NotificationWrapper(context);
+        this.alarmWrapper = new AlarmWrapper(context);
     }
 
     @JavascriptInterface
     public String showToastAndReturnString(String value) {
-        Toast.makeText(mContext, value, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, value, Toast.LENGTH_SHORT).show();
         return "my string~!";
     }
 
@@ -43,6 +43,21 @@ public class WebViewInterface {
     @JavascriptInterface
     public boolean isAlarmExist(String requestCodeStr) {
         return alarmWrapper.isExist(requestCodeStr);
+    }
+
+    @JavascriptInterface
+    public void saveAllAlarmData(String alarmDataJsonStr) {
+        SharedPreferencesWrapper.saveAllAlarmData(context, alarmDataJsonStr);
+    }
+
+    @JavascriptInterface
+    public String getAllAlarmData() {
+        return SharedPreferencesWrapper.getAllAlarmData(context);
+    }
+
+    @JavascriptInterface
+    public void disableReceiver() {
+        alarmWrapper.disableReceiver();
     }
 
 }
