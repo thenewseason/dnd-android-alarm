@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
+//    private static final String url = "http://192.168.219.109:8080/";
+    private static final String url = "http://192.100.1.143:8080/";
+//    private static final String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
+    private static final String USER_AGENT_HINT = " gongmorer_alarm";
     private WebView webView;
 
     @Override
@@ -26,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.addJavascriptInterface(new WebViewInterface(this, webView), "Native");
+
+        String userAgent = webView.getSettings().getUserAgentString();
+        webView.getSettings().setUserAgentString(userAgent + USER_AGENT_HINT);
 
         webView.loadUrl(url);
     }

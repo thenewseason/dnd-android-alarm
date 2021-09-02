@@ -26,13 +26,13 @@ public class WebViewInterface {
     }
 
     @JavascriptInterface
-    public void createNotification(String title, String description, String largeIconType) {
-        notificationWrapper.notify(title, description, largeIconType);
+    public void createNotification(String title, String text, String largeIconType) {
+        notificationWrapper.notify(title, text, largeIconType);
     }
 
     @JavascriptInterface
-    public void setAlarm(String requestCodeStr, String epochMillisecondsStr, String title, String text, String largeIconType) {
-        alarmWrapper.set(requestCodeStr, epochMillisecondsStr, title, text, largeIconType);
+    public void setAlarm(String requestCodeStr, String triggerAtMillisStr, String title, String text, String largeIconType) {
+        alarmWrapper.set(requestCodeStr, triggerAtMillisStr, title, text, largeIconType);
     }
 
     @JavascriptInterface
