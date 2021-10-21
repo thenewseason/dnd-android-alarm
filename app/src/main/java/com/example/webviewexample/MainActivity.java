@@ -1,5 +1,7 @@
 package com.example.webviewexample;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
 //    private static final String url = "http://192.100.1.143:8080/";
 //    private static final String url = "http://192.100.1.143:5500/publishing/android_alarm_test.html";
-//    private static final String url = "http://192.168.219.109:8080/";
-    private static final String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
+    private static final String url = "http://192.168.219.106:5500/publishing/android_alarm_test.html";
+//    private static final String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
     private static final String USER_AGENT_HINT = " gongmorer_alarm";
     private static final String PREF_KEY_STOP_TIME = "pref-key-stop-time";
     private WebView webView;
@@ -79,7 +81,15 @@ public class MainActivity extends AppCompatActivity {
     private class WebViewClientClass extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
+            if (url.startsWith("intent:") || url.startsWith("market:")
+                    || url.startsWith("kakaoopen:") || url.startsWith("kakaolink:")) {
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            } else {
+                view.loadUrl(url);
+            }
+
             return true;
         }
     }

@@ -11,12 +11,14 @@ public class WebViewInterface {
     private WebView webView;
     private NotificationWrapper notificationWrapper;
     private AlarmWrapper alarmWrapper;
+    private AppLauncherUtil appLauncherUtil;
 
     public WebViewInterface(Context context, WebView webView) {
         this.context = context;
         this.webView = webView;
         this.notificationWrapper = new NotificationWrapper(context);
         this.alarmWrapper = new AlarmWrapper(context);
+        this.appLauncherUtil = new AppLauncherUtil(context);
     }
 
     @JavascriptInterface
@@ -58,6 +60,16 @@ public class WebViewInterface {
     @JavascriptInterface
     public void disableReceiver() {
         alarmWrapper.disableReceiver();
+    }
+
+    @JavascriptInterface
+    public void launchApp(String packageName) {
+        appLauncherUtil.launchApp(packageName);
+    }
+
+    @JavascriptInterface
+    public void launchUri(String uri) {
+        appLauncherUtil.launchUri(uri);
     }
 
 }
