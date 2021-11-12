@@ -15,11 +15,11 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final String url = "http://192.100.1.143:8080/";
+    private static final String url = "http://192.168.219.106:8080";
 //    private static final String url = "http://192.100.1.143:5500/publishing/android_alarm_test.html";
-    private static final String url = "http://192.168.219.106:5500/publishing/android_alarm_test.html";
+//    private static final String url = "http://192.168.219.106:5500/publishing/android_alarm_test.html";
 //    private static final String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
-    private static final String USER_AGENT_HINT = " gongmorer_alarm";
+    private static final String USER_AGENT_HINT = " gongmorer_alarm gongmorer_launch";
     private static final String PREF_KEY_STOP_TIME = "pref-key-stop-time";
     private WebView webView;
 
@@ -71,8 +71,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-            webView.goBack();
-            return true;
+            if (isModal(webView.getUrl())) {
+                webView.goBack();
+                return true;
+            }
+            if (!isHome(webView.getUrl())) {
+                webView.loadUrl(url);
+                return true;
+            }
         }
 
         return super.onKeyDown(keyCode, event);
@@ -92,5 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
+    }
+
+    private boolean isHome(String url) {
+        return url.endsWith("8080/") || url.endsWith("8080");
+    }
+
+    private boolean isModal(String url) {
+        return webView.getUrl().contains("#modal-");
     }
 }
