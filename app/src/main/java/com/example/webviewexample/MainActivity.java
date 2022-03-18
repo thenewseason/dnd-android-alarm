@@ -1,13 +1,17 @@
 package com.example.webviewexample;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,18 +19,23 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String url = "http://192.168.219.106:8080";
+//    private static final String url = "http://192.168.219.104:8080";
+    private static final String url = "https://gongmorer.kr";
 //    private static final String url = "http://192.100.1.143:5500/publishing/android_alarm_test.html";
-//    private static final String url = "http://192.168.219.106:5500/publishing/android_alarm_test.html";
-//    private static final String url = "http://192.168.219.109:5500/publishing/android_alarm_test.html";
+//    private static final String url = "http://192.168.219.104:5500/publishing/android_alarm_test.html";
+//    private static final String url = "http://192.168.219.104:5500/publishing/screencapture_home.html";
+//    private static final String USER_AGENT_HINT = " ";
     private static final String USER_AGENT_HINT = " gongmorer_alarm gongmorer_launch";
     private static final String PREF_KEY_STOP_TIME = "pref-key-stop-time";
     private WebView webView;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        context = this;
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -87,13 +96,28 @@ public class MainActivity extends AppCompatActivity {
     private class WebViewClientClass extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.startsWith("intent:") || url.startsWith("market:")
-                    || url.startsWith("kakaoopen:") || url.startsWith("kakaolink:")) {
+            if (URLUtil.isNetworkUrl(url)) {
+                return false;
+            }
 
+            if (url.startsWith("tel:")) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                startActivity(intent);
+                return true;
+            }
+
+            if (url.startsWith("mailto:")) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                startActivity(intent);
+                return true;
+            }
+
+            try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
-            } else {
-                view.loadUrl(url);
+                return true;
+            } catch(Exception e) {
+                Toast.makeText(context, "앱 실행에 실패했어요..", Toast.LENGTH_SHORT).show();
             }
 
             return true;
