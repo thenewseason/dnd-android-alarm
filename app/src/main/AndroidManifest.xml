@@ -4,7 +4,43 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <queries>
+        <package android:name="kr.com.wink" />
+        <package android:name="com.daishin" />
+        <package android:name="com.daishin.creon" />
+        <package android:name="com.dongbusec.xts" />
+        <package android:name="com.imeritz.smartmeritz" />
+        <package android:name="com.miraeasset.trade" />
+        <package android:name="com.bookook.mtsplus" />
+        <package android:name="com.samsungpop.android.mpop" />
+        <package android:name="com.samsungpop.android.masset" />
+        <package android:name="com.shinyoung.smartreeplus" />
+        <package android:name="com.shinhaninvest.nsmts" />
+        <package android:name="com.sks.android.neojoopasoo" />
+        <package android:name="com.hmsec.mobile" />
+        <package android:name="com.yuanta.tradarm" />
+        <package android:name="com.eugenefn.smartchampion2" />
+        <package android:name="com.eugenefn.youtoo" />
+        <package android:name="com.ebest.mobile" />
+        <package android:name="com.ebest.mine" />
+        <package android:name="com.ligstock.mtsplus" />
+        <package android:name="com.linkzen.app" />
+        <package android:name="com.fosskorea.foss" />
+        <package android:name="com.hanasec.stock" />
+        <package android:name="com.app.shd.spstock" />
+        <package android:name="com.hiib.android.him" />
+        <package android:name="com.truefriend.neosmarta" />
+        <package android:name="kr.co.koreastock.mts.android" />
+        <package android:name="com.kbsec.mts.iplustarngm2" />
+        <package android:name="com.ktb.android.mobiletrading" />
+        <package android:name="com.bnkfn.mtsplus" />
+        <package android:name="com.wooriwm.txsmart" />
+        <package android:name="com.wooriwm.mugsmart" />
+        <package android:name="com.ibk.farm" />
+        <package android:name="viva.republica.toss" />
+        <package android:name="com.bridgefn.mtsplus" />
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -15,7 +51,9 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.WebViewExample">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,15 +63,17 @@
 
         <receiver android:name=".DeviceBootReceiver"
             android:enabled="false"
-            android:exported="true">
+            android:exported="false">
 
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
+        <!-- enabled="false" : 알람을 사용하지 않는 경우 수신하지 않도록 함 -->
         <receiver android:name=".AlarmReceiver"
-            android:enabled="false"/> <!-- 알람을 사용하지 않는 경우 수신하지 않도록 함 -->
+            android:enabled="false"
+            android:exported="false" />
 
     </application>
 
