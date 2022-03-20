@@ -2,13 +2,15 @@ package com.example.webviewexample;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClientClass());
         webView.setVerticalScrollBarEnabled(false);
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d("MainActivity", "onKeyDown()");
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
             if (isModal(webView.getUrl())) {
                 webView.goBack();
@@ -96,8 +100,12 @@ public class MainActivity extends AppCompatActivity {
     private class WebViewClientClass extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Log.d("MainActivity", "shouldOverrideUrlLoading()");
+            Log.d("MainActivity", url);
+
             if (URLUtil.isNetworkUrl(url)) {
-                return false;
+                webView.loadUrl(url);
+                return true;
             }
 
             if (url.startsWith("tel:")) {
@@ -122,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            Log.d("MainActivity", "onReceivedError");
+            view.loadUrl("file:///android_asset/error_network.html");
+        }
+
     }
 
     private boolean isHome(String url) {
@@ -130,5 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isModal(String url) {
         return webView.getUrl().contains("#modal-");
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }
