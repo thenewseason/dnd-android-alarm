@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,8 +22,8 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final String url = "http://192.168.219.104:8080";
-    private static final String url = "https://gongmorer.kr";
+    private static final String url = "http://192.168.219.104:8080";
+//    private static final String url = "https://gongmorer.kr";
 //    private static final String url = "http://192.100.1.143:5500/publishing/android_alarm_test.html";
 //    private static final String url = "http://192.168.219.104:5500/publishing/android_alarm_test.html";
 //    private static final String url = "http://192.168.219.104:5500/publishing/screencapture_home.html";
@@ -88,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
                 webView.goBack();
                 return true;
             }
+
+            if (isCustomNetworkErrorPage(webView.getUrl())) {
+                return super.onKeyDown(keyCode, event);
+            }
+
             if (!isHome(webView.getUrl())) {
                 webView.loadUrl(url);
                 return true;
@@ -134,13 +140,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             Log.d("MainActivity", "onReceivedError");
-            view.loadUrl("file:///android_asset/error_network.html");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (request.isForMainFrame()) { // isForMainFrame() 을 LOLLIPOP 부터 지원
+                    view.loadUrl("file:///android_asset/error_network.html");
+                }
+            }
         }
 
     }
 
     private boolean isHome(String url) {
         return url.endsWith("8080/") || url.endsWith("8080");
+    }
+
+    private boolean isCustomNetworkErrorPage(String url) {
+        return url.endsWith("error_network.html");
     }
 
     private boolean isModal(String url) {
